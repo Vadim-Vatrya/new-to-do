@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 // import Counter from './components/Counter';
 import PostList from './components/PostList';
+import PostForm from './components/PostForm';
 
 import './App.css';
-import MyButton from './components/UI/MyButton';
-import MyInput from './components/UI/MyInput';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -13,15 +12,18 @@ function App() {
     { id: 3, title: 'Python', body: 'Description' },
   ]);
 
+  const createPost = newPost => {
+    setPosts([...posts, newPost]);
+  };
+
+  const removePost = post => {
+    posts.filter(p => p.id !== post.id);
+  };
+
   return (
     <div className="App">
-      <form>
-        <MyInput type="text" placeholder="Название поста" />
-        <MyInput type="text" placeholder="Описание поста" />
-        <MyButton disabled>Создать пост</MyButton>
-      </form>
-
-      <PostList posts={posts} title="Список постов" />
+      <PostForm create={createPost} />
+      <PostList remove={removePost} posts={posts} title="Список постов" />
 
       {/* <Counter /> */}
     </div>
