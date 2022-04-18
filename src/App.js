@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import Counter from './components/Counter';
+import PostItem from './components/PostItem';
+
+import './App.css';
 
 function App() {
-  const [likes, setLikes] = useState(5);
-  const [value, setValue] = useState('Текст в инпуте');
-
-  function increment() {
-    setLikes(likes + 1);
-  }
-
-  function decrement() {
-    setLikes(likes - 1);
-  }
+  // const [value, setValue] = useState('Текст в инпуте');
 
   return (
     <div className="App">
-      <h1>{likes}</h1>
-      <h2>{value}</h2>
-      <input type="text" value={value} />
-      <button onClick={increment}>Increment</button>
-      <button onClick={decrement}>Decrement</button>
+      {/* <Counter /> */}
+      <PostItem post={{ id: 1, title: 'JavaScript', body: 'Description' }} />
     </div>
   );
 }
