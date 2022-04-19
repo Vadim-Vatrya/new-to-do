@@ -11,7 +11,7 @@
   display: flex;
   padding: 15px;
   margin-top: 15px;
-  border: 2px solid tomato;
+  border: 2px solid greenyellow;
   justify-content: space-between;
   align-items: center;
 }
@@ -19,4 +19,14 @@
 .title {
   text-align: center;
   margin-top: 15px;
+}
+
+.main {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 28px;
+}
+
+.delimiter {
+  margin: 15px 0;
 }
