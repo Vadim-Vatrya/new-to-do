@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 // import Counter from './components/Counter';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
@@ -7,34 +8,21 @@ import MyModal from './components/UI/MyModal';
 
 import './App.css';
 import MyButton from './components/UI/button/MyButton';
+import { usePosts } from './components/hooks/usePosts';
 
 function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: 'JavaScript', body: 'Description' },
-    { id: 2, title: 'Java', body: 'Description' },
-    { id: 3, title: 'Python', body: 'Description' },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  // const [selectedSort, setSelectedSort] = useState('');
-  // const [searchQuery, setSearchQuery] = useState('');
-
-  const sortedPosts = useMemo(() => {
-    if (filter.sort) {
-      return [
-        ...posts.sort((a, b) => a[filter.sort].localeCompare(b[filter.sort])),
-      ];
-    }
-    return posts;
-  }, [filter.sort, posts]);
-
-  const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter(posts =>
-      posts.title.toLocaleLowerCase().includes(filter.query),
+  async function fetchPosts() {
+    const responce = await axios.get(
+      'https://jsonplaceholder.typicode.com/posts',
     );
-  }, [filter.query, sortedPosts]);
+    setPosts(responce.data);
+  }
 
   const createPost = newPost => {
     setPosts([...posts, newPost]);
@@ -47,6 +35,7 @@ function App() {
 
   return (
     <div className="App">
+      <button onClick={fetchPosts}>GET POSTS</button>
       <MyButton style={{ marginTop: 40 }} onClick={() => setModal(true)}>
         Создать пользователя
       </MyButton>
