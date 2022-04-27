@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import PostService from './components/API/PostService';
 // import Counter from './components/Counter';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
 import PostFilter from './components/PostFilter';
 import MyModal from './components/UI/MyModal';
+import Loader from './components/Loader/Loader';
 
 import './App.css';
 import MyButton from './components/UI/button/MyButton';
@@ -12,17 +13,24 @@ import { usePosts } from './components/hooks/usePosts';
 
 function App() {
   const [posts, setPosts] = useState([]);
-
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
+
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
   async function fetchPosts() {
-    const responce = await axios.get(
-      'https://jsonplaceholder.typicode.com/posts',
-    );
-    setPosts(responce.data);
+    setIsPostsLoading(true);
+    setTimeout(async () => {
+      const posts = await PostService.getAll();
+      setPosts(posts);
+      setIsPostsLoading(false);
+    }, 1000);
   }
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const createPost = newPost => {
     setPosts([...posts, newPost]);
@@ -35,7 +43,6 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={fetchPosts}>GET POSTS</button>
       <MyButton style={{ marginTop: 40 }} onClick={() => setModal(true)}>
         Создать пользователя
       </MyButton>
@@ -45,12 +52,17 @@ function App() {
 
       <hr className="delimiter"></hr>
       <PostFilter filter={filter} setFilter={setFilter} />
-      <PostList
-        remove={removePost}
-        posts={sortedAndSearchedPosts}
-        title="List of posts"
-      />
-      {/* <Counter /> */}
+      {isPostsLoading ? (
+        <div className="loader">
+          <Loader />
+        </div>
+      ) : (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchedPosts}
+          title="List of posts"
+        />
+      )}
     </div>
   );
 }
